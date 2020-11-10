@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.swp
+*.log
+.DS_Store
+.idea/
+.vagrant/
+node_modules/
+static/
+client/build/
+client/node_modules/
+venv/
