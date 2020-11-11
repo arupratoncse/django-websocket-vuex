@@ -1,11 +1,15 @@
 <template>
     <div class="pipeline">
       <div class="pipeline-title">
-        {{pipeLine.title}} count: {{pipeLine.cards.length}}
+        {{pipeLine.title}}<b-badge>{{pipeLine.cards.length}}</b-badge>&nbsp;
         <span @click="showCardModal" class="close-button h4 text-success"
           v-b-tooltip.hover.top title="Add new card item">
           <b-icon icon="plus-square"></b-icon>
-        </span>
+        </span>&nbsp;
+        <span @click="updatePipeline(pipeLine)" class="close-button h4 text-info"
+          v-b-tooltip.hover.top title="Update PipeLine">
+          <b-icon icon="pencil-fill"></b-icon>
+        </span>&nbsp;
         <span @click="deletePipeLine(pipeLine)" class="close-button h4 text-danger"
           v-b-tooltip.hover.top title="Delete PipeLine">
           <b-icon icon="trash"></b-icon>
@@ -13,27 +17,27 @@
       </div>
       <div class="card-list">
           <draggable :options="options" v-model="cards" class="card-draggable-base">
-              <card :card="card" v-for="(card, i) in cards" v-bind:key="i"></card>
+              <card :card="card" v-for="(card, i) in cards" v-bind:key="i" @update-card="showUpdateCard"></card>
           </draggable>
       </div>
       <b-modal
-        title="Add new Card"
+        :title="card_head"
         ref="cardModal"
         header-class="bg-info text-light"
         body-class="text-info"
         no-close-on-esc
         no-close-on-backdrop
-        @ok="addCard">
+        @ok="addOrUpdateCard">
         <div>
-          <form @submit.prevent="addCard">
+          <form @submit.prevent="addOrUpdateCard">
             <div>
               Card Title:
             </div>
             <b-form-input
               name="card-title"
               type="text"
-              v-model="card_title"
-              :state="card_title.length > 0"
+              v-model="item_card.title"
+              :state="item_card.title.length > 0"
               maxlength="100">
             </b-form-input>
             <div>
@@ -42,8 +46,8 @@
             <b-form-textarea
               name="card-content"
               type="text"
-              v-model="card_content"
-              :state="card_content.length > 0"
+              v-model="item_card.content"
+              :state="item_card.content.length > 0"
               rows="3"
               max-rows="6">
             </b-form-textarea>
@@ -66,25 +70,44 @@
         },
         methods: {
           showCardModal(){
-            this.card_title = ''
-            this.card_content = ''
+            this.card_head = "Add New Card"
+            this.item_card = {
+              card_id: null,
+              title: '',
+              content: ''
+            }
             this.$refs.cardModal.show()
           },
-          addCard(){
-            if(! this.card_content || !this.card_title){
+          addOrUpdateCard(){
+            if(!this.item_card.title || !this.item_card.content){
                 return;
             }
-            this.$store.dispatch('add_card', {
-                'pipeLineId': this.pipeLine.id,
-                'title': this.card_title,
-                'content': this.card_content,
-                'order': this.pipeLine.cards.length,
-            });
+            if(!this.item_card.card_id){
+              this.$store.dispatch('add_card', {
+                  'pipeLineId': this.pipeLine.id,
+                  'title': this.item_card.title,
+                  'content': this.item_card.content,
+                  'order': this.pipeLine.cards.length,
+              })
+            }
+            else{
+              this.$store.dispatch('update_card', this.item_card)
+            }
+          },
+          showUpdateCard(item){
+            this.card_head = "Update Card"
+            this.item_card = item
+            this.$refs.cardModal.show()
+          },
+          updatePipeline(item){
+            this.$emit('update-pipeline', {'title': item.title, 'id': item.id})
           },
           deletePipeLine(item){
             const confirm = window.confirm("Are you sure to delete PipeLine: "+ item.title);
             if(confirm){
-              console.log(item)
+              this.$store.dispatch('delete_pipeline', {
+                'pipeline_id': item.id
+              })
             }
           }
         },
@@ -108,8 +131,12 @@
                 group: "kanban",
                 animation: 300,
             },
-            card_title: '',
-            card_content: ''
+            item_card:{
+              card_id: null,
+              title: '',
+              content: ''
+            },
+            card_head: ''
           };
         }
     }

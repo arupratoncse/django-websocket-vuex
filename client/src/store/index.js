@@ -23,8 +23,20 @@ export default new Vuex.Store({
     add_pipeline(context, payload){
         console.log('action add_pipeline called', payload);
     },
+    update_pipeline(context, payload){
+        console.log('action update_pipeline called', payload);
+    },
+    delete_pipeline(context, payload){
+      console.log('action delete_pipeline call', payload)
+    },
     add_card(context, payload){
         console.log('action add_card called', payload);
+    },
+    update_card(context, payload){
+        console.log('action update_pipeline called', payload);
+    },
+    delete_card(context, payload){
+      console.log('action delete_card call', payload)
     },
     update(context, payload){
         // The actual commit is on the plugin side

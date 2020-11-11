@@ -45,9 +45,29 @@ def add_card(pipeline_id, title, content, order):
 
 
 @database_sync_to_async
+def update_card(card_id, title, content):
+    Card.objects.filter(id=card_id).update(title=title, content=content)
+
+
+@database_sync_to_async
+def delete_card(card_id):
+    Card.objects.filter(id=card_id).delete()
+
+
+@database_sync_to_async
 def add_pipeline(kanban_id, title, order):
     PipeLine.create(
         kanban_id=kanban_id,
         title=title,
         order=order,
     )
+
+
+@database_sync_to_async
+def update_pipeline(pipeline_id, title):
+    PipeLine.objects.filter(id=pipeline_id).update(title=title)
+
+
+@database_sync_to_async
+def delete_pipeline(pipeline_id):
+    PipeLine.objects.filter(id=pipeline_id).delete()

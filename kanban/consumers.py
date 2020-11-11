@@ -14,7 +14,11 @@ class KanbanConsumer(AsyncWebsocketConsumer):
         self.type_map = {
             'update': self._update,
             'add_card': self._add_card,
+            'update_card': self._update_card,
+            'delete_card': self._delete_card,
             'add_pipeline': self._add_pipeline,
+            'update_pipeline': self._update_pipeline,
+            'delete_pipeline': self._delete_pipeline,
         }
 
     async def connect(self):
@@ -88,11 +92,66 @@ class KanbanConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    async def _update_card(self, payload):
+        await kanban_sv.update_card(
+            card_id=payload['card_id'],
+            title=payload['title'],
+            content=payload['content']
+        )
+        # Send message to room group
+        await self.channel_layer.group_send(
+            self.kanban_name,
+            {
+                'type': 'updated',
+                'payload': {}
+            }
+        )
+
+    async def _delete_card(self, payload):
+        await kanban_sv.delete_card(
+            card_id=payload['card_id']
+        )
+        # Send message to room group
+        await self.channel_layer.group_send(
+            self.kanban_name,
+            {
+                'type': 'updated',
+                'payload': {}
+            }
+        )
+
     async def _add_pipeline(self, payload):
         await kanban_sv.add_pipeline(
             kanban_id=payload['kanbanId'],
             title=payload['title'],
             order=payload['order'],
+        )
+        # Send message to room group
+        await self.channel_layer.group_send(
+            self.kanban_name,
+            {
+                'type': 'updated',
+                'payload': {}
+            }
+        )
+
+    async def _update_pipeline(self, payload):
+        await kanban_sv.update_pipeline(
+            pipeline_id=payload['pipeline_id'],
+            title=payload['title']
+        )
+        # Send message to room group
+        await self.channel_layer.group_send(
+            self.kanban_name,
+            {
+                'type': 'updated',
+                'payload': {}
+            }
+        )
+
+    async def _delete_pipeline(self, payload):
+        await kanban_sv.delete_pipeline(
+            pipeline_id=payload['pipeline_id']
         )
         # Send message to room group
         await self.channel_layer.group_send(

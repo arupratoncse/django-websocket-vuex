@@ -11,7 +11,7 @@
     <div class="sticky-top shadow">
       <nav class="navbar navbar-dark navbar-expand-lg bg-success">
         <a href="/" target="_self" class="navbar-brand">
-          Simple Kanban
+          Simple Kanban websocket
         </a>
       </nav>
     </div>
@@ -41,7 +41,12 @@
       </div>
       <div class="list-group">
         {% for kanban in kanbans %}
-          <a href="{% url 'detail' kanban.id %}" class="list-group-item list-group-item-action">{{ kanban.title }}</a>
+          <div class="list-group-item list-group-item-action">
+            <a href="{% url 'detail' kanban.id %}">
+              {{ kanban.title }}
+            </a>
+            <a href="{% url 'delete' kanban.id %}" class="btn btn-sm btn-danger float-right">Delete</a>
+          </div>
         {% endfor %}
       </div>
     </div>

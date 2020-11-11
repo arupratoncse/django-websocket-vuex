@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from .forms import KanbanForm
 from .models import Kanban
+from django.shortcuts import redirect
 
 
 def home(request):
@@ -19,6 +20,20 @@ def home(request):
 
 
 def kanban_detail(request, kanban_id):
+    try:
+        Kanban.objects.get(id=kanban_id)
+    except Kanban.DoesNotExist:
+        return redirect('kanban')
+
     return render(request, 'kanban/detail.html', {
         'kanban_id': kanban_id
     })
+
+
+def delete_kanban(request, kanban_id):
+    try:
+        Kanban.objects.get(id=kanban_id).delete()
+        messages.success(request, "Kanban deleted successfully!")
+    except Exception:
+        messages.warning(request, "Kanban deletion Failed!")
+    return redirect('kanban')
