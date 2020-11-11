@@ -35,11 +35,11 @@ def update_kanban(pipeline_id, card_id_list):
 
 
 @database_sync_to_async
-def add_card(pipeline_id, title, order):
+def add_card(pipeline_id, title, content, order):
     Card.create(
         pipeline_id=pipeline_id,
         title=title,
-        content='content_{}'.format(title),
+        content=content,
         order=order,
     )
 

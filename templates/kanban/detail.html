@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'client/css/app.css' %}">
+    <title>Welcome to Kanban</title>
+  </head>
+  <body>
+    <div class="sticky-top shadow">
+      <nav class="navbar navbar-dark navbar-expand-lg bg-success">
+        <a href="/" target="_self" class="navbar-brand">
+          Simple Kanban
+        </a>
+      </nav>
+    </div>
+    <div class="container-fluid">
+      <div id="app"></div>
+    </div>
+    <div class="text-center fixed-bottom p-3 bg-light">
+      <span class="text-muted">&copy; {% now 'Y' %} Kanban</span>
+    </div>
+    <script charset="UTF-8" src="{% static 'client/js/app.js' %}"></script>
+  </body>
+</html>

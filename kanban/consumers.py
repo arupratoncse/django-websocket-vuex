@@ -76,6 +76,7 @@ class KanbanConsumer(AsyncWebsocketConsumer):
         await kanban_sv.add_card(
             pipeline_id=payload['pipeLineId'],
             title=payload['title'],
+            content=payload['content'],
             order=payload['order'],
         )
         # Send message to room group
