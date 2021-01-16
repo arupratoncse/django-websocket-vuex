@@ -61,3 +61,4 @@ python manage.py collectstatic
 python manage.py runserver 0.0.0.0:8000
 ```
 You can browse from a web browser at http://0.0.0.0:8000/
+Ref: https://qiita.com/denzow/items/aa8f01222fa356b814a3
